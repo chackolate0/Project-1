@@ -92,7 +92,7 @@ int main(void){
     TRISB = 0x101;
     ANSELB = 0x0;
     LCD_Init();
-    LCD_WriteStringAtPos("Team: 1", 0, 0);
+    LCD_WriteStringAtPos("Team 1", 0, 0);
     while(1){
         if(PORTFbits.RF0){
             btnState = 0;
