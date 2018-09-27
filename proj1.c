@@ -50,6 +50,8 @@
 #pragma config BWP = OFF                // Boot Flash Write Protect bit (Protection Disabled)
 #pragma config CP = OFF                 // Code Protect (Protection Disabled)
 
+#define DELAY 7813              //200 ms
+
 // #pragma config statements should precede project file includes.
 // Use project enums instead of #define for ON and OFF.
 
@@ -84,17 +86,20 @@
 int main(void){
     int btnState=0; //Default value of 0 so the lights don't move, 1 means shift right, 2 will shift left.
     int WAIT = 200;
-    TRISA = 0x0;
+    TRISA = 0xF00;
     ANSELA = 0x0;
     LATA = 0x1;
     TRISF = 0x1;
     ANSELF = 0x0;
     TRISB = 0x101;
     ANSELB = 0x0;
+    T1CON = 0x8030;
     LCD_Init();
     LCD_WriteStringAtPos("Team 1", 0, 0);
+    LCD_WriteStringAtPos("Matias & Alex", 1, 0);
     while(1){
         if(PORTFbits.RF0){
+            delay_ms();
             btnState = 0;
         }
         else if(PORTBbits.RB8){
@@ -104,7 +109,7 @@ int main(void){
             btnState = 2;
         }
         if(btnState==1){
-            delay_ms(WAIT);
+            delay_ms();
             if(PORTAbits.RA0){
                 LATA = 0x80;
             }
@@ -113,7 +118,7 @@ int main(void){
             }
         }
         else if(btnState==2){
-            delay_ms(WAIT);
+            delay_ms();
             if(PORTAbits.RA7){
                 LATA = 0x01;
             }
@@ -127,10 +132,9 @@ int main(void){
     }
 }
 
-void delay_ms(int ms) {
-    int i, counter;
-    for (counter = 0; counter < ms; counter++) {
-        for (i = 0; i < 300; i++) {
-        } //software delay ~1 millisec 
+void delay_ms() {
+    TMR1 = 0;
+    while(TMR1 < DELAY){
+        
     }
 }
